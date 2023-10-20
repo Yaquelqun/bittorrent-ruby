@@ -51,10 +51,10 @@ class BencodeDecoder
     input.match(/(i[-\d]*e)/)[1].length
   end
 
-    # returns the length of the first encoded element if it is a list
-    def encoded_list_length(input)
-      input.match(/(l.*e)/)[1].length
-    end
+  # returns the length of the first encoded element if it is a list
+  def encoded_list_length(input)
+    input.match(/(l.*e)/)[1].length
+  end
 
   # returns a decoded array if the first element of the input is a list
   def decode_list(input)
