@@ -7,15 +7,31 @@ class BencodeDecoder
   end
 
   def call
-    case encoded_str[0].chr
+    send("decode_#{format(encoded_str)}", encoded_str)
+  end
+
+  private
+
+  def format(input)
+    case input[0].chr
     when /\d/
-      length = encoded_str.split(':')[0].to_i
-      encoded_str.split(':')[1][0, length]
+      :string
     when 'i'
-      encoded_str[1..-2].to_i
+      :integer
+    when 'l'
+      :list
     else
       puts "unsupported_format"
       exit(1)
     end
+  end
+
+  def decode_string(input)
+    length = input.split(':')[0].to_i
+    input.split(':')[1][0, length]
+  end
+
+  def decode_integer(input)
+    input[1..-2].to_i
   end
 end
