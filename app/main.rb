@@ -1,21 +1,9 @@
 require 'json'
+require_relative 'bencode_decoder'
 
 if ARGV.length < 2
   puts "Usage: your_bittorrent.sh <command> <args>"
   exit(1)
-end
-
-def decode_bencode(bencoded_value)
-  case bencoded_value[0].chr
-  when /\d/
-    length = bencoded_value.split(':')[0].to_i
-    bencoded_value.split(':')[1][0, length]
-  when 'i'
-    bencoded_value[1..-2].to_i
-  else
-    puts "Only strings are supported at the moment"
-    exit(1)
-  end
 end
 
 command = ARGV[0]
@@ -23,7 +11,7 @@ command = ARGV[0]
 case command
 when "decode"
   encoded_str = ARGV[1]
-  decoded_str = decode_bencode(encoded_str)
+  decoded_str = BencodeDecoder.new(encoded_str).call
   puts JSON.generate(decoded_str)
 end
 
