@@ -6,9 +6,12 @@ if ARGV.length < 2
 end
 
 def decode_bencode(bencoded_value)
-  if bencoded_value[0].chr.match?(/\d/)
+  case bencoded_value[0].chr
+  when /\d/
     length = bencoded_value.split(':')[0].to_i
     bencoded_value.split(':')[1][0, length]
+  when 'i'
+    bencoded_value[1..-2].to_i
   else
     puts "Only strings are supported at the moment"
     exit(1)
@@ -17,9 +20,10 @@ end
 
 command = ARGV[0]
 
-if command == "decode"
-    encoded_str = ARGV[1]
-    decoded_str = decode_bencode(encoded_str)
-    puts JSON.generate(decoded_str)
+case command
+when "decode"
+  encoded_str = ARGV[1]
+  decoded_str = decode_bencode(encoded_str)
+  puts JSON.generate(decoded_str)
 end
 
