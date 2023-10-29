@@ -36,7 +36,7 @@ class BencodeDecoder
   # returns a decoded string if the first element of the input is a string
   def decode_string(input)
     string_length = input.split(':')[0].to_i
-    input.split(':')[1..].join[0, string_length]
+    input.split(':')[1..].join(':')[0, string_length]
   end
 
   # returns the length of the first encoded element if it is a string
