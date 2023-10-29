@@ -15,7 +15,7 @@ when "decode"
   puts JSON.generate(decoded_str)
 when "info"
   file_path = ARGV[1]
-  encoded_torrent = File.read(file_path, encoding: 'iso-8859-1')
+  encoded_torrent = File.read(file_path)
   decoded_torrent = BencodeDecoder.new(encoded_torrent).call
   puts "Tracker URL: #{decoded_torrent['announce']}"
   puts "Length: #{decoded_torrent.dig('info', 'length')}"
