@@ -12,7 +12,7 @@ case command
 when "decode"
   encoded_str = ARGV[1]
   decoded_str = BencodeDecoder.new(encoded_str).call
-  puts JSON.generate(decoded_str)
+  puts decoded_str.inspect
 when "info"
   file_path = ARGV[1]
   encoded_torrent = File.read(file_path)
