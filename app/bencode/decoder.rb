@@ -48,5 +48,13 @@ module Bencode
       state.current_index += 1
       result
     end
+
+    def decode_dictionary
+      array = decode_list
+
+      result = []
+      result << array.shift(2) until array.empty?
+      result.to_h
+    end
   end
 end
