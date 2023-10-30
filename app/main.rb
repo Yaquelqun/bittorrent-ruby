@@ -18,7 +18,7 @@ when "decode"
   puts JSON.generate(result)
 when "info"
   file_path = ARGV[1]
-  encoded_torrent = File.read(file_path)
+  encoded_torrent = File.read(file_path, encoding: 'iso-8859-1')
   state = Bencode::StateManager.build_initial_state(encoded_torrent)
   result, = Bencode::Decoder.new(state).call
   puts "Tracker URL: #{result['announce']}"
