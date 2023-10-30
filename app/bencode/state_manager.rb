@@ -16,6 +16,7 @@ module Bencode
       return state if state.current_index == state.original_input.length
 
       state.format = FormatFinder.format(state.original_input[state.current_index..])
+      state
     end
   end
 end

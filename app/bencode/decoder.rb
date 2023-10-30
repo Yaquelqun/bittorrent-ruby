@@ -12,13 +12,10 @@ module Bencode
     # decodes the encoded string
     def call
       result = send("decode_#{state.format}")
-      Bencode::StateManager.update_state(state)
       [result, state]
     end
 
     private
-
-    ### STRING ###
 
     def decode_string
       str_len, str = input.split(':', 2)
@@ -37,6 +34,19 @@ module Bencode
 
       state.current_index += counter + 1
       result.to_i
+    end
+
+    def decode_list
+      result = []
+      state.current_index += 1
+      while state.original_input[state.current_index] != 'e'
+        @state = Bencode::StateManager.update_state(state)
+        element, @state = Bencode::Decoder.new(state).call
+        result << element
+      end
+
+      state.current_index += 1
+      result
     end
   end
 end
