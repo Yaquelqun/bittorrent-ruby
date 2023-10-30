@@ -14,13 +14,13 @@ case command
 when "decode"
   encoded_str = ARGV[1]
   state = Bencode::StateManager.build_initial_state(encoded_str)
-  result, final_state = Bencode::Decoder.new(state).call
+  result, = Bencode::Decoder.new(state).call
   puts JSON.generate(result)
 when "info"
   file_path = ARGV[1]
   encoded_torrent = File.read(file_path)
   state = Bencode::StateManager.build_initial_state(encoded_torrent)
-  result, final_state = Bencode::Deoder.new(state).decode
+  result, = Bencode::Decoder.new(state).call
   puts "Tracker URL: #{result['announce']}"
   puts "Length: #{result.dig('info', 'length')}"
 end
