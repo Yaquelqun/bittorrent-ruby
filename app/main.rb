@@ -23,8 +23,16 @@ when "info"
   state = Bencode::StateManager.build_initial_state(encoded_torrent)
   result, = Bencode::Decoder.new(state).call
   info_hash = Digest::SHA1.hexdigest(Bencode::Encoder.new(result['info']).call)
+  pieces = result.dig('info', 'pieces').unpack1('H*').split('') # Magic trick to get the binary in the torrent turned into proper characters
+
   puts "Tracker URL: #{result['announce']}"
   puts "Length: #{result.dig('info', 'length')}"
   puts "Info Hash: #{info_hash}"
+  puts "Piece Length: #{result.dig('info', 'piece length')}"
+
+  puts "Piece Hashes:"
+  # Kinda cheating, but since we want 20 binary char per line and it only takes 2 characters
+  # to encode it in hexa, we can put characers 40 per 40
+  puts pieces.shift(40).join('') until pieces.empty?
 end
 
