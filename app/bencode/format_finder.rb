@@ -5,7 +5,7 @@ module Bencode
   module FormatFinder
     extend self
 
-    def format(input)
+    def encoded_format(input)
       case input[0].chr
       when /\d/
         :string
@@ -15,6 +15,22 @@ module Bencode
         :list
       when 'd'
         :dictionary
+      else
+        puts "unsupported_format"
+        exit(1)
+      end
+    end
+
+    def decoded_format(input)
+      case input
+      when String, Symbol
+        :string
+      when Array
+        :list
+      when Integer
+        :integer
+      when Hash
+        :dictionnary
       else
         puts "unsupported_format"
         exit(1)

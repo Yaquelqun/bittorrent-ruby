@@ -8,14 +8,14 @@ module Bencode
       state = OpenStruct.new
       state.original_input = input
       state.current_index = 0
-      state.format = FormatFinder.format(input)
+      state.format = FormatFinder.encoded_format(input)
       state
     end
 
     def update_state(state)
       return state if state.current_index == state.original_input.length
 
-      state.format = FormatFinder.format(state.original_input[state.current_index..])
+      state.format = FormatFinder.encoded_format(state.original_input[state.current_index..])
       state
     end
   end
