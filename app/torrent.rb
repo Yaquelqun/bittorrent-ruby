@@ -55,11 +55,13 @@ class Torrent
       compact: 1
     }
     uri.query = URI.encode_www_form(params)
-
     res = Net::HTTP.get_response(uri)
+
     if res.is_a?(Net::HTTPSuccess)
       res.body
     else
+      puts @torrent
+      puts uri
       puts res.body
       raise 'failed peer retrieval'
     end
