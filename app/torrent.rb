@@ -2,9 +2,11 @@
 
 require 'forwardable'
 require 'net/http'
+require_relative 'helpers/byte_formatter'
 
 class Torrent
   extend Forwardable
+  include ::Helpers::BytesFormatter
 
   def_delegators :@torrent, :info, :announce
 
@@ -13,7 +15,7 @@ class Torrent
   end
 
   def display_details
-    pieces = info['pieces'].bytes.map { _1.to_s(16).rjust(2, '0') }
+    pieces = hex_representation(info['pieces'])
     info_hash = Digest::SHA1.hexdigest(encoded_info)
 
     puts "Tracker URL: #{announce}"
@@ -27,19 +29,24 @@ class Torrent
   end
 
   def peers
+    peers = []
     state = Bencode::StateManager.build_initial_state(encoded_peers)
     result, = Bencode::Decoder.new(state).call
-
-    result
+    hex_peers = hex_representation(result['peers'])
+    peers << hex_peers.shift(6) until hex_peers.empty?
+    peers.map do |ip|
+      address = ip[..3].map { _1.to_i(16) }.join('.')
+      port = ip[4..].join.to_i(16)
+      "#{address}:#{port}"
+    end
   end
 
   private
 
   def encoded_peers
     uri = URI(announce)
-    info_hash = Digest::SHA1.digest(encoded_info)
     params = {
-      info_hash: info_hash,
+      info_hash: Digest::SHA1.digest(encoded_info),
       peer_id: '00112233445566778899',
       port: 6881,
       uploaded: 0,
