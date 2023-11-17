@@ -10,8 +10,6 @@ if ARGV.length < 2
   exit(1)
 end
 
-command = ARGV[0]
-
 def decode(input:, from: :path)
   input = File.read(input, encoding: 'iso-8859-1') unless from == :string
   state = Bencode::StateManager.build_initial_state(input)
@@ -19,6 +17,7 @@ def decode(input:, from: :path)
   result
 end
 
+command = ARGV[0]
 case command
 when "decode"
   puts JSON.generate(decode(input: ARGV[1], from: :string))
